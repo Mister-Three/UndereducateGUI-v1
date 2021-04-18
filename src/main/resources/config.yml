@@ -1,0 +1,11 @@
+############################################################
+# +------------------------------------------------------+ #
+# |                 UndereducateGUI Config               | #
+# +------------------------------------------------------+ #
+############################################################
+#                    Made by Undereducate                  #
+###########################################################
+
+# Prefix, allows for normal color codes, hex color codes, and gradients.
+# COLOR API: https://www.spigotmc.org/resources/iridiumcolorapi.87351/
+prefix:
