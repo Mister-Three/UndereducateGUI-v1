@@ -3,4 +3,21 @@ version: ${project.version}
 main: site.undereducate.UndereducateGUIPlugin
 api-version: 1.16
 authors: [Undereducate]
+depend:
+  - UndereducatedUtil
 description: UndereducateGUI is a feature filled plugin to view everyone online in a GUI
+commands:
+  onlinegui:
+    description: Launches the GUI
+    permission: gui.use
+    permission-message: You do not have permission to use UndereducateGUI
+    usage: /<command>
+permissions:
+  gui.use:
+    description: Allows you to view the GUI
+    default: op
+  gui.*:
+    description: All permissions for UndereducateGUI
+    default: op
+    children:
+      gui.use: true

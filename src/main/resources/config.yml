@@ -6,6 +6,15 @@
 #                    Made by Undereducate                  #
 ###########################################################
 
-# Prefix, allows for normal color codes, hex color codes, and gradients.
-# COLOR API: https://www.spigotmc.org/resources/iridiumcolorapi.87351/
-prefix:
+# All messages here support the Iridium Color API
+# Read more here: https://www.spigotmc.org/resources/iridiumcolorapi.87351/
+
+prefix: <GRADIENT:568fd8>GUI</GRADIENT:245ca5> &8l &r
+
+############################################################
+#                        GUI Config                        #
+###########################################################
+
+gui:
+  showPing: true
+  showBalance: false
