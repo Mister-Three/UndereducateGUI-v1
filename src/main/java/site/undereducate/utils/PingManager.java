@@ -7,7 +7,7 @@ public class PingManager {
 
 	public static int getPing(Player p) {
 		try {
-			Object entityPlayer = p.getClass().getMethod("getHandle", new Class[0]).invoke(p, new Object[0]);
+			Object entityPlayer = p.getClass().getMethod("getHandle", new Class[0]).invoke(p);
 			System.out.println(entityPlayer.getClass().getField("ping").get(entityPlayer));
 			return (Integer) entityPlayer.getClass().getField("ping").get(entityPlayer);
 		} catch (IllegalAccessException|IllegalArgumentException|java.lang.reflect.InvocationTargetException|NoSuchMethodException|SecurityException|NoSuchFieldException e) {
@@ -22,13 +22,13 @@ public class PingManager {
 	}
 
 	public static String formatPing(Integer ping) {
-		if (ping.intValue() < 100){
+		if (ping < 100){
 			return ChatColor.translateAlternateColorCodes('&', "&a" + ping);
 		}
-		if (ping.intValue() < 200){
+		if (ping < 200){
 			return ChatColor.translateAlternateColorCodes('&', "&e" + ping);
 		}
-		if (ping.intValue() < 350){
+		if (ping < 350){
 			return ChatColor.translateAlternateColorCodes('&', "&c" + ping);
 		}
 		return ChatColor.translateAlternateColorCodes('&', "&4" + ping);

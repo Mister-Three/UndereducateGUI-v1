@@ -5,6 +5,7 @@ import com.hakan.invapi.inventory.invs.HInventory;
 import com.hakan.invapi.inventory.invs.Pagination;
 import com.hakan.invapi.inventory.item.ClickableItem;
 import com.iridium.iridiumcolorapi.IridiumColorAPI;
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.command.Command;
@@ -14,10 +15,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import site.undereducate.UndereducateGUIPlugin;
+import site.undereducated.undereducatedutil.UndereducatedAPI;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -47,7 +50,7 @@ public class GUICommand implements CommandExecutor {
 		for(Player p : Bukkit.getServer().getOnlinePlayers()){
 			// add their head to the list, and an event
 			clickableItemList.add(ClickableItem.of(new ItemStack(getPlayerHead(p)), (event) -> {
-				System.out.println(event.getSlot());
+				hInventory.close(p);
 			}));
 		}
 
@@ -99,10 +102,23 @@ public class GUICommand implements CommandExecutor {
 		ItemMeta Meta = item.getItemMeta();
 		// set the display name to the players display name
 		Meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&f" + player.getName()));
+		// if showIfVanished is enabled
+		if( plugin.getConfig().getBoolean("gui.showIfVanished")){
+			if(isVanished(player)){
+				Meta.setDisplayName(UndereducatedAPI.process("<SOLID:98a5aa>[<SOLID:dd574b>V<SOLID:98a5aa>]&f " + player.getName()));
+			}
+		}
 		// set the item meta
 		item.setItemMeta(Meta);
 		// return the skull
 		return addLore(item, player);
+	}
+
+	private boolean isVanished(Player player) {
+		for (MetadataValue meta : player.getMetadata("vanished")) {
+			if (meta.asBoolean()) return true;
+		}
+		return false;
 	}
 
 	// set lore
@@ -110,14 +126,35 @@ public class GUICommand implements CommandExecutor {
 		// get ItemMeta from provided ItemStack
 		ItemMeta itemMeta = i.getItemMeta();
 		// Init list of strings for the lores
-		List<String> loresList = new ArrayList<String>();
+		List<String> lores = new ArrayList<String>();
+		// if showRank is enabled
+		if( plugin.getConfig().getBoolean("gui.showRank")){
+			String rankStr = plugin.getConfig().getString("lores.rank")
+					.replace("%rank%", UndereducateGUIPlugin.chat.getPlayerPrefix(p));
+			lores.add(UndereducatedAPI.process(rankStr));
+		}
 		// if ping enabled
 		if( plugin.getConfig().getBoolean("gui.showPing")){
 			// add values to the lore
-			loresList.add(ChatColor.translateAlternateColorCodes('&', "&a" + "Ping: " + getFormatedPing(p)));
+			String ping = plugin.getConfig().getString("lores.ping")
+					.replace("%ping%", getFormatedPing(p));
+			lores.add(UndereducatedAPI.process(ping));
+		}
+		// if showBalance is enabled
+		if( plugin.getConfig().getBoolean("gui.showBalance")){
+			String balanceStr = plugin.getConfig().getString("lores.balance")
+					.replace("%balance%", String.valueOf(UndereducateGUIPlugin.econ.getBalance(p)));
+			String balance = UndereducatedAPI.process(balanceStr);
+			lores.add(balance);
+		}
+		// if showClient is enabled
+		if( plugin.getConfig().getBoolean("gui.showClient")){
+			String clientStr = plugin.getConfig().getString("lores.client");
+			clientStr = PlaceholderAPI.setPlaceholders(p, clientStr);
+			lores.add(UndereducatedAPI.process(clientStr));
 		}
 		// set the lore
-		itemMeta.setLore(loresList);
+		itemMeta.setLore(lores);
 		// set the meta
 		i.setItemMeta(itemMeta);
 		return i;

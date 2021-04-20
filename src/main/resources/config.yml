@@ -16,5 +16,31 @@ prefix: <GRADIENT:568fd8>GUI</GRADIENT:245ca5> &8l &r
 ###########################################################
 
 gui:
-  showPing: true
+  # Show ping under players name
+  showPing: false
+  # Show Players balance
+  # Requires Vault and an Economy plugin
   showBalance: false
+  # Show Players rank
+  # Requires Vault and a permissions plugin
+  showRank: false
+  # Show Client brand and version
+  # Requires PlaceholderAPI, ViaVersion and ClientDetection
+  showClient: false
+  # Vanished indicator (Displays a [V] before IGN if vanished)
+  # Requires a supported Vanish plugin (SuperVanish, PremiumVanish, VanishNoPacket and a few others.)
+  showIfVanished: false
+
+############################################################
+#                        LORE Config                       #
+###########################################################
+
+lores:
+  #Ping lore, the text that shows up for their ping
+  ping: "&aPing: %ping%ms"
+  #Balance lore, the text that shows up for their balance
+  balance: "<SOLID:92d68b>Balance: $<SOLID:cece44>%balance%"
+  #Rank lore, the text that shows up for their rank
+  rank: "<SOLID:92d68b>Rank: %rank%"
+  #Client lore, the text that shows up for their client version and brand.
+  client: "<SOLID:92d68b>Client: %client_version% (%client_brand%)"

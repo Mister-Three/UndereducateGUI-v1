@@ -3,8 +3,8 @@ version: ${project.version}
 main: site.undereducate.UndereducateGUIPlugin
 api-version: 1.16
 authors: [Undereducate]
-depend:
-  - UndereducatedUtil
+depend: [UndereducatedUtil]
+softdepend: [Vault, PlaceholderAPI]
 description: UndereducateGUI is a feature filled plugin to view everyone online in a GUI
 commands:
   onlinegui:
