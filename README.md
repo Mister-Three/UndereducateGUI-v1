@@ -15,6 +15,17 @@ I'm open to requests to show more modules within the GUI, just open an [issue](h
 
 Nearly everything within UndereducateGUI is configurable. This includes toggling modules, changing the prefix, lores and the messages. Check out the config [here](https://github.com/undereducated/UndereducateGUI-v1/blob/master/src/main/resources/config.yml).
 
+### Dependencies
+
+##### Placeholder API is strongly recommended.
+
+For the plugin to launch it requires `UndereducatedUtils`, which is my API plugin so I can have cleaner code. Get it here: [Download link](http://rotf.lol/undereducateapi)
+
+For `showBalance` you need [Vault](https://www.spigotmc.org/resources/vault.34315/), and an Economy plugin.<br>
+For `showRank` you need [Vault](https://www.spigotmc.org/resources/vault.34315/), and a Permissions plugin, and a Chat plugin.<br>
+For `showClient` you need [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/), [ViaVersion](https://www.spigotmc.org/resources/viaversion.19254/), and [ClientDetection](https://github.com/undereducated/ClientDetection-v1) <br>
+For `showIfVanished` you need a supported Vanish plugin like SuperVanish, PremiumVanish, VanishNoPacket or something similar.
+
 ### Commands and permissions
 
 #### Commands
