@@ -294,13 +294,19 @@ public class GUICommand implements CommandExecutor {
 		// if showClient is enabled
 		if( plugin.getConfig().getBoolean("gui.showClient")){
 			String clientStr = plugin.getConfig().getString("lores.client");
-			try{
-				clientStr = PlaceholderAPI.setPlaceholders(p, clientStr);
-				if(clientStr != null)
-					lores.add(UndereducatedAPI.process(clientStr));
-			} catch(NullPointerException exception){
+			Plugin PlaceholderAPIPlugin = Bukkit.getPluginManager().getPlugin("PlaceholderAPI");
+			if(PlaceholderAPIPlugin != null){
+				try{
+					clientStr = PlaceholderAPI.setPlaceholders(p, clientStr);
+					if(clientStr != null)
+						lores.add(UndereducatedAPI.process(clientStr));
+				} catch(NullPointerException exception){
+					lores.add(UndereducatedAPI.process("<SOLID:92d68b>Client: Unable to fetch"));
+					UndereducatedAPI.log(String.format("There was an error fetching the client version of %s", p.getDisplayName()), "UndereducateGUI");
+				}
+			} else{
 				lores.add(UndereducatedAPI.process("<SOLID:92d68b>Client: Unable to fetch"));
-				UndereducatedAPI.log(String.format("There was an error fetching the client version of %s", p.getDisplayName()), "UndereducateGUI");
+				UndereducatedAPI.log(String.format("There was an error fetching the client version of %s, Placeholder API is not installed.", p.getDisplayName()), "UndereducateGUI");
 			}
 		}
 

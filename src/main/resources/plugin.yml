@@ -19,8 +19,16 @@ permissions:
   gui.use:
     description: Allows you to view the GUI
     default: op
+  gui.reload:
+    description: Allows you to reload the configuration
+    default: op
+  gui.configure:
+    description: Allows you to configure the GUI
+    default: op
   gui.*:
     description: All permissions for UndereducateGUI
     default: op
     children:
       gui.use: true
+      gui.configure: true
+      gui.reload: true
