@@ -5,11 +5,14 @@ import com.hakan.invapi.inventory.invs.HInventory;
 import com.hakan.invapi.inventory.invs.Pagination;
 import com.hakan.invapi.inventory.item.ClickableItem;
 import com.iridium.iridiumcolorapi.IridiumColorAPI;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import me.clip.placeholderapi.PlaceholderAPI;
+import net.milkbowl.vault.chat.Chat;
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
@@ -44,7 +47,6 @@ public class GUICommand implements CommandExecutor {
 			HInventory hInventory = InventoryAPI.getInventoryManager().setTitle(Bukkit.getOnlinePlayers().size() + " online players").setCloseable(false).setSize(5).setId("b").create();
 			Pagination pagination = hInventory.getPagination();
 			pagination.setItemSlots(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35));
-
 			// Setup array
 			List<ClickableItem> clickableItemList = new ArrayList<>();
 			// for each player
@@ -79,10 +81,11 @@ public class GUICommand implements CommandExecutor {
 							// send the message stripped of color
 							player.performCommand(ChatColor.stripColor(cmd));
 						}
+					} else 	if(event.getClick() == ClickType.RIGHT){
+
 					}
 				}));
 			}
-
 			// add all the items to paginate
 			pagination.setItems(clickableItemList);
 
@@ -110,7 +113,7 @@ public class GUICommand implements CommandExecutor {
 		}
 		else if(args.length == 1){
 			if(args[0].equalsIgnoreCase("reload") || args[0].equalsIgnoreCase("rl")){
-				if(!player.hasPermission("clientdetection.viewother")){
+				if(!player.hasPermission("gui.reload")){
 					player.sendMessage(UndereducatedAPI.process(String.format("%s&cYou do not have permission to reload the configuration", plugin.getConfig().getString("messages.prefix"))));
 					return true;
 				}
@@ -119,6 +122,77 @@ public class GUICommand implements CommandExecutor {
 				UndereducatedAPI.log("Reloaded configuration", "UndereducateGUI");
 				return true;
 			} else if(args[0].equalsIgnoreCase("config")){
+				if(!player.hasPermission("gui.configure")){
+					player.sendMessage(UndereducatedAPI.process(String.format("%s&cYou do not have permission to configure this plugin", plugin.getConfig().getString("messages.prefix"))));
+					return true;
+				}
+				HInventory configInv = InventoryAPI.getInventoryManager().setTitle("Config").setSize(3).setId("bb").create();
+				List<String> features = new ArrayList<String>();
+				Collections.addAll(features, "showPing", "showHealth", "showBalance", "showRank", "showClient", "showIfVanished");
+				Integer slot = 0;
+				for (String feature : features) {
+					Boolean enabled = plugin.getConfig().getBoolean("gui." + feature);
+					ItemStack glass;
+					if(enabled){
+						glass = new ItemStack(Material.GREEN_STAINED_GLASS_PANE, 1);
+						ItemMeta glassMeta = glass.getItemMeta();
+						glassMeta.setDisplayName(UndereducatedAPI.process("&a" + feature));
+						List<String> lores = new ArrayList<String>();
+						lores.add(UndereducatedAPI.process("&fCurrently &a&lenabled&r&f, click to disable."));
+						glassMeta.setLore(lores);
+						glass.setItemMeta(glassMeta);
+					} else{
+						glass = new ItemStack(Material.RED_STAINED_GLASS_PANE, 1);
+						ItemMeta glassMeta = glass.getItemMeta();
+						glassMeta.setDisplayName(UndereducatedAPI.process("&c" + feature));
+						List<String> lores = new ArrayList<String>();
+						lores.add(UndereducatedAPI.process("&fCurrently &c&ldisabled&r&f, click to enable."));
+						glassMeta.setLore(lores);
+						glass.setItemMeta(glassMeta);
+					}
+					configInv.setItem(slot, ClickableItem.of(glass, (event) -> {
+						String configValue = ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName());
+						Boolean configEnabled = plugin.getConfig().getBoolean("gui." + configValue);
+						if(configEnabled){
+							plugin.getConfig().set("gui." + configValue, false);
+							plugin.saveConfig();
+							plugin.reloadConfig();
+							player.sendMessage(UndereducatedAPI.process(String.format("%s &7Successfully disabled %s ", plugin.getConfig().getString("messages.prefix"), configValue)));
+							player.performCommand("gui config");
+						} else if(!configEnabled){
+							plugin.getConfig().set("gui." + configValue, true);
+							plugin.saveConfig();
+							plugin.reloadConfig();
+							player.sendMessage(UndereducatedAPI.process(String.format("%s &7Successfully enabled %s ", plugin.getConfig().getString("messages.prefix"), configValue)));
+							player.performCommand("gui config");
+						}
+					}));
+					slot++;
+				}
+
+				ItemStack commandsBook = new ItemStack(Material.WRITABLE_BOOK, 1);
+				ItemMeta commandsBookMeta = commandsBook.getItemMeta();
+				commandsBookMeta.setDisplayName(UndereducatedAPI.process("&aCustom commands"));
+				List<String> lores = new ArrayList<String>();
+				List<String> list = null;
+				assert list != null;
+
+				lores.add(UndereducatedAPI.process("&fYou can add commands to execute"));
+				lores.add(UndereducatedAPI.process("&fwhenever you click someone"));
+				lores.add(UndereducatedAPI.process("&fCheck it out in the config!"));
+				lores.add("");
+				lores.add(UndereducatedAPI.process("&fYour commands:"));
+				// define the list from the config
+				list = (List<String>) plugin.getConfig().getList("gui.execute");
+				// for each entry in list
+				for (String s : list) {
+					lores.add(UndereducatedAPI.process("&c&o/" + s));
+				}
+				commandsBookMeta.setLore(lores);
+				commandsBook.setItemMeta(commandsBookMeta);
+				configInv.setItem(26, ClickableItem.of(commandsBook, (event) -> {}));
+
+				configInv.open(player);
 				// open config gui
 				return true;
 			} else if(args[0].equalsIgnoreCase("help")){
@@ -245,5 +319,4 @@ public class GUICommand implements CommandExecutor {
 						Objects.requireNonNull(plugin.getConfig().getString("messages.prefix")));
 		reciever.sendMessage(UndereducatedAPI.process(msg));
 	}
-
 }
