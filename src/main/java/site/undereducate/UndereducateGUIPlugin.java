@@ -1,14 +1,24 @@
 package site.undereducate;
 
 import com.hakan.invapi.InventoryAPI;
+import litebans.api.Database;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.Nullable;
 import site.undereducate.commands.GUICommand;
+import site.undereducate.events.onTabCompleteListener;
 import site.undereducated.undereducatedutil.UndereducatedAPI;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.function.Consumer;
 
 public final class UndereducateGUIPlugin extends JavaPlugin {
 
@@ -18,7 +28,10 @@ public final class UndereducateGUIPlugin extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+
+		// setup commands
 		this.getCommand("onlinegui").setExecutor(new GUICommand(this));
+		// setup UndereducatedUtils
 		try {
 			UndereducatedAPI.loadPlugin("UndereducateGUI");
 		} catch (Exception e) {
@@ -27,6 +40,11 @@ public final class UndereducateGUIPlugin extends JavaPlugin {
 		// load config
 		getConfig().options().copyDefaults();
 		saveDefaultConfig();
+
+
+		// setup events
+		PluginManager pluginManager = Bukkit.getServer().getPluginManager();
+		pluginManager.registerEvents(new onTabCompleteListener(this), this);
 
 		// Setup InvAPI
 		InventoryAPI.setup(this);
@@ -74,4 +92,6 @@ public final class UndereducateGUIPlugin extends JavaPlugin {
 		chat = rsp.getProvider();
 		return chat != null;
 	}
+
+
 }

@@ -8,7 +8,6 @@ public class PingManager {
 	public static int getPing(Player p) {
 		try {
 			Object entityPlayer = p.getClass().getMethod("getHandle", new Class[0]).invoke(p);
-			System.out.println(entityPlayer.getClass().getField("ping").get(entityPlayer));
 			return (Integer) entityPlayer.getClass().getField("ping").get(entityPlayer);
 		} catch (IllegalAccessException|IllegalArgumentException|java.lang.reflect.InvocationTargetException|NoSuchMethodException|SecurityException|NoSuchFieldException e) {
 			e.printStackTrace();

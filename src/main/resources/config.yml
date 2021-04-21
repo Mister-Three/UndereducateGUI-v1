@@ -9,15 +9,18 @@
 # All messages here support the Iridium Color API
 # Read more here: https://www.spigotmc.org/resources/iridiumcolorapi.87351/
 
-prefix: <GRADIENT:568fd8>GUI</GRADIENT:245ca5> &8l &r
-
 ############################################################
 #                        GUI Config                        #
 ###########################################################
 
 gui:
+
+  ## Toggles
+
   # Show ping under players name
   showPing: false
+  # Show health under players name
+  showHealth: false
   # Show Players balance
   # Requires Vault and an Economy plugin
   showBalance: false
@@ -31,6 +34,10 @@ gui:
   # Requires a supported Vanish plugin (SuperVanish, PremiumVanish, VanishNoPacket and a few others.)
   showIfVanished: false
 
+  ## Custom commands
+
+  execute: ["tp %player%"]
+
 ############################################################
 #                        LORE Config                       #
 ###########################################################
@@ -40,7 +47,24 @@ lores:
   ping: "&aPing: %ping%ms"
   #Balance lore, the text that shows up for their balance
   balance: "<SOLID:92d68b>Balance: $<SOLID:cece44>%balance%"
+  #Health lore, the text that shows up for their health
+  health: "<SOLID:92d68b>Health: &c❤%health%"
   #Rank lore, the text that shows up for their rank
   rank: "<SOLID:92d68b>Rank: %rank%"
   #Client lore, the text that shows up for their client version and brand.
   client: "<SOLID:92d68b>Client: %client_version% (%client_brand%)"
+
+
+############################################################
+#                        MESSAGE Config                    #
+###########################################################
+
+messages:
+  # The text prefixed with each message
+  prefix: "<GRADIENT:568fd8>ONLINE</GRADIENT:245ca5> &8l&r "
+  # The message sent when you open the gui
+  openGUI: "%prefix% &7Opening OnlineGUI.."
+  # The message sent when you execute commands on a player
+  execCommands: "%prefix% &aExecuting commands from the config..."
+  # The message sent when you try to execute commands on yourself
+  selfCommands: "%prefix% &cYou cannot execute commands on yourself"

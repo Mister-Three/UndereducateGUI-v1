@@ -8,6 +8,9 @@ softdepend: [Vault, PlaceholderAPI]
 description: UndereducateGUI is a feature filled plugin to view everyone online in a GUI
 commands:
   onlinegui:
+    aliases:
+      - gui
+      - list
     description: Launches the GUI
     permission: gui.use
     permission-message: You do not have permission to use UndereducateGUI
